@@ -23,7 +23,6 @@
             text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             max-width: 360px;
-            position: relative;
             z-index: 2;
         }
 
@@ -42,8 +41,7 @@
             border-radius: 25px;
             font-size: 16px;
             cursor: pointer;
-            transition: 0.3s;
-            position: relative;
+            transition: all 0.3s ease;
         }
 
         .yes {
@@ -72,7 +70,7 @@
             border-radius: 15px;
         }
 
-        /* Corazones flotando */
+        /* Corazones */
         .heart {
             position: absolute;
             color: #ff4d6d;
@@ -99,17 +97,24 @@
 <body>
 
 <div class="card">
-    <h1>💌 Hey Karoll, Johann tiene una pregunta:💌</h1>
-    <p>¿Quieres ser su San Valentín?</p>
+    <h1>💌 Hey Karoll, Johann tiene una pregunta 💌</h1>
+    <p>¿Quieres ser su San Valentín?💖</p>
 
     <button class="yes" onclick="respuestaSi()">Sí 💖</button>
-    <button class="no" id="btnNo">No 😅</button>
+    <button class="no" id="btnNo" onclick="respuestaNo()">No 😅</button>
 
     <div id="respuesta"></div>
 </div>
 
 <script>
+    /* 🎶 Música romántica (Bensound – Romantic Piano) */
+    const musica = new Audio("https://www.bensound.com/bensound-music/bensound-romantic.mp3");
+    musica.loop = true;
+    musica.volume = 0.6;
+
     function respuestaSi() {
+        musica.play();
+
         document.getElementById("respuesta").innerHTML = `
             🥰 Te amo mucho, prepárate que te voy a llevar a cenar 🍽️💖<br><br>
             📅 <strong>14 de febrero</strong><br>
@@ -120,16 +125,36 @@
         `;
     }
 
+    /* 😈 Botón NO travieso */
+    const mensajesNo = [
+        "😅 Esa no es la respuesta correcta",
+        "🤨 ¿Segura?",
+        "🙄 Inténtalo otra vez",
+        "😏 Mmm nop",
+        "💖 Sabes que es SÍ",
+        "😂 Ya casi desaparezco"
+    ];
 
+    let intentos = 0;
     const btnNo = document.getElementById("btnNo");
 
-    btnNo.addEventListener("mouseover", () => {
-        const x = Math.random() * 200 - 100;
-        const y = Math.random() * 200 - 100;
-        btnNo.style.transform = `translate(${x}px, ${y}px)`;
-    });
+    function respuestaNo() {
+        intentos++;
 
-    // Corazones flotando
+        const mensaje = mensajesNo[intentos % mensajesNo.length];
+        document.getElementById("respuesta").innerHTML = mensaje;
+
+        const escala = Math.max(0.3, 1 - intentos * 0.15);
+        btnNo.style.transform = `scale(${escala})`;
+
+        if (escala <= 0.35) {
+            btnNo.style.display = "none";
+            document.getElementById("respuesta").innerHTML =
+                "😌 El botón NO se rindió… solo queda una opción 💖";
+        }
+    }
+
+    /* 💕 Corazones flotando */
     function crearCorazon() {
         const heart = document.createElement("div");
         heart.classList.add("heart");
@@ -139,7 +164,6 @@
         heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
 
         document.body.appendChild(heart);
-
         setTimeout(() => heart.remove(), 6000);
     }
 
@@ -148,3 +172,4 @@
 
 </body>
 </html>
+
